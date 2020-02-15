@@ -1,0 +1,22 @@
+
+#happiness {
+	background-image: linear-gradient(to right bottom, #dffc00, #e5fb00, #eafb00, #f0fa00, #f5f900, #f7f700, #faf500, #fcf300, #fcef00, #fceb00, #fce700, #fce300);
+}
+#anger {
+	background-image: linear-gradient(to right bottom, #080807, #170e00, #260f00, #360a05, #44001e, #4f002a, #590037, #620047, #79003f, #8d0031, #9b001f, #a30000);
+}
+#sadness {
+	background-image: linear-gradient(to right bottom, #00004f, #080358, #130362, #1d046b, #270475, #440178, #5b007b, #70007d, #8f0077, #aa006f, #c10064, #d40058);
+}
+#calmness {
+	background-image: linear-gradient(to right bottom, #fc8f00, #ff8453, #ff8486, #ff90b0, #f1a0cd, #f29cc3, #f298ba, #f195b0, #f58776, #d88b34, #999700, #1a9e03);
+}
+#spirituality {
+	background-image: linear-gradient(to right bottom, #0d051a, #311839, #61214f, #962559, #c93055, #cf2f53, #d62e50, #dc2d4d, #bb0f54, #960056, #6f0053, #48014a);
+}
+#excitement {
+	background-image: linear-gradient(to right bottom, #9e0000, #b00001, #c10001, #d40001, #e60001, #ee1901, #f72800, #ff3400, #ff4700, #ff5600, #ff6300, #ff6f00);
+}
+#fear {
+	background-image: linear-gradient(to right bottom, #3d0000, #632c38, #845a6b, #a4899c, #c6bbc9, #d7d2dc, #eae8ee, #f01c3f, #ffa57f, #f89fcf, #df5f07, #ff5fcf);
+}
