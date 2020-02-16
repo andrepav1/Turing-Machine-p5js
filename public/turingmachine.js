@@ -6,11 +6,13 @@ class TuringMachine {
 		this.displayCurrentTape = () => this.tape.show(); 
 		this.currState = 0;
 		this.currPosition = 0;
+		this.timeout = false;
 		
 		// Run Turing Machine
-		this.run = () => {
+		this.run = (timeout) => {
+			if(!this.timeout) this.timeout = timeout;
 			if(this.step()) {
-				setTimeout(this.run,2000);
+				setTimeout(this.run,this.timeout);
 			} // else do nothing
 		}
 
@@ -33,6 +35,7 @@ class TuringMachine {
 		// Add a new Rule
 		this.addRule = (new_rule) => {
 			this.rules[this.rules.length] = new_rule;
+			console.log("Rule added successfully: " + new_rule.toString());
 		}
 
 		// Remove a rule
@@ -55,7 +58,7 @@ class TuringMachine {
 	}
 
 	setSymbol(new_symbol) {
-		this.tape.setCurrentSymbol(new_symbol)
+		this.tape.setCurrentSymbol(new_symbol);
 	}
 
 	setCurrentPosition(move) {
@@ -78,14 +81,18 @@ class TuringMachine {
 		let curr_state = this.currState;
 		let curr_symbol = this.tape.getCurrentSymbol();
 
-		// console.log("Searching: " + curr_state + ", " + curr_symbol);
-
+		// console.log("Searching: " + curr_state + ", " + ((curr_symbol === "" || curr_symbol === " ") ? empty : curr_symbol));
+		// console.log("=================================");
+		// console.log("Available Rules:");
+		let rule;
 		for (let i in this.rules) {
-			// console.log(this.rules[i]);
-			if(this.rules[i].old_state == curr_state.toString() && this.rules[i].old_symbol == curr_symbol.toString()) {
-				return this.rules[i];
+			// console.log(this.rules[i].toString());
+			if(this.rules[i].old_state === curr_state.toString() && this.rules[i].old_symbol === curr_symbol.toString()) {
+				rule = this.rules[i];
 			}
 		}
+		// console.log("=================================");
+		return rule;
 	}
 }
 
@@ -97,5 +104,15 @@ class TMRule {
 		this.old_symbol = _old_symbol;
 		this.new_symbol = _new_symbol;
 		this.move = _move;
+
+		this.toString = () => {
+			return "(" + this.old_state + ", " + 
+				((this.old_symbol == "" || this.old_symbol == " ") ? 
+					empty : this.old_symbol) + " -> " + 
+				this.new_state + ", " + 
+				((this.new_symbol == "" || this.new_symbol == " ") ? 
+					empty : this.new_symbol) + ", " + 
+				((this.move != "R" && this.move != "L") ? 
+					"0" : this.move) + ")"; }
 	}
 }

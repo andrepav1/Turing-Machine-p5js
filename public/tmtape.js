@@ -6,11 +6,11 @@ const empty = "Λ";
 class TMTape {
 
   constructor(_symbols, _size) {
-    this.squareSize = Math.ceil(window.innerWidth / (_size + 2));
+    this.squareSize = Math.floor(window.innerWidth / (_size + 1));
     this.pos = new Position(0,40,window.innerWidth, this.squareSize);
     this.symbols = _symbols;
     this.tapeSize = _size;
-    this.offsetPos = Math.floor((_size - _symbols.length) / 2); // TODO
+    this.offsetPos = Math.floor((_size - _symbols.length) / 2);
     this.TMsquares = [];
     this.currPosition = 0;
     this.currState = 0;
@@ -27,13 +27,13 @@ class TMTape {
     for(let i = 0; i < this.tapeSize + 2; i++) {
       let pos = new Position(i * this.squareSize - 4, 40, this.squareSize, this.squareSize);
       let tapePos = i - this.offsetPos;
-      let symbol = empty 
+      let symbol = "" 
 
       if(i >= midTapePos && i < midTapePos + this.symbols.length) {
         symbol = this.symbols[i - midTapePos];
       }
 
-      if(symbol === "" || symbol === " ") symbol = empty;
+      if(symbol === " ") symbol = "";
 
       if(i == 0 || i == this.tapeSize + 1) {
         symbol = "⋯";
@@ -60,7 +60,7 @@ class TMTape {
 
   setCurrentSymbol(new_symbol) {
 
-    if(new_symbol === "" || new_symbol === " ") new_symbol = empty;
+    if(new_symbol === " ") new_symbol = "";
     this.TMsquares[this.currPosition + this.offsetPos].symbol = new_symbol;
   }
   
@@ -70,8 +70,7 @@ class TMTape {
 
   show() {
     
-    console.log("Current state:" + this.currState);
-    console.log("Current position:" + this.currPosition);
+    console.log("State:" + this.currState + ", Position: " + this.currPosition);
 
     fill(230)
     rect(this.pos.x,this.pos.y,this.pos.w,this.pos.h);
@@ -83,7 +82,8 @@ class TMTape {
 
     this.setHighlightSquare(this.currPosition + this.offsetPos);
 
-    background(50);
+    fill(50);
+    rect(0,0,width, this.squareSize + 50);
 
     for(let i in this.TMsquares) {
       this.TMsquares[i].show(this.currState);
@@ -91,7 +91,6 @@ class TMTape {
 
     this.TMsquares[this.currPosition + this.offsetPos].show(this.currState);
   }
-
 }
 
 // =========================================
@@ -136,7 +135,10 @@ class TMSquare {
 
     // Draw Symbol
     textSize(this.fontSize); 
-    text(this.symbol, this.pos.x + this.pos.w*0.5, this.pos.y + this.pos.h*0.75);
+    let sym = this.symbol;
+
+    if(sym === "" || sym === " ") sym = empty;
+    text(sym, this.pos.x + this.pos.w*0.5, this.pos.y + this.pos.h*0.75);
 
     // Draw TMSquare position on the bottom-right corner 
     textSize(this.fontSize * 0.35);
