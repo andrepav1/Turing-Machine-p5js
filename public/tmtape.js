@@ -10,7 +10,7 @@ class TMTape {
     this.pos = new Position(0,40,window.innerWidth, this.squareSize);
     this.symbols = _symbols;
     this.tapeSize = _size;
-    this.offsetPos = Math.floor((_size - _symbols.length) / 2);
+    this.offsetPos = Math.floor((_size - _symbols.length) / 5);
     this.TMsquares = [];
     this.currPosition = 0;
     this.currState = 0;
@@ -21,7 +21,7 @@ class TMTape {
 
   initTape() {
 
-    let midTapePos = Math.floor((this.tapeSize - (this.symbols.length)) / 2);
+    let midTapePos = Math.floor((this.tapeSize - (this.symbols.length)) / 5);
     // console.log(window.innerWidth + " - " + midTapePos);
 
     for(let i = 0; i < this.tapeSize + 2; i++) {
@@ -121,6 +121,7 @@ class TMSquare {
       //           arrow_pos_x + this.pos.w/4, 35 - this.pos.w/6, 
       //           arrow_pos_x, 35);
 
+      fill(256);
       textSize(32); 
       text(state.toString(), arrow_pos_x, 32);
     }

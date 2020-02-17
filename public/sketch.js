@@ -3,26 +3,26 @@ let tm;
 
 function setup() {
 
-  let arr = ["1","1"];
-  let size = 8;
+  let arr = ["1","1","1","1","1","1","1","1","1","1","1","1","1"];
+  let size = 30;
 
   let tape = new TMTape(arr,size);
 
 
-  drawCanvas(window.innerWidth, tape.pos.h + 140);
+  drawCanvas(window.innerWidth, tape.pos.h + 400);
 
   tm = new TuringMachine(tape);
   tm.displayCurrentTape();
 
   fill(250);
-  rect(0,tape.pos.h + 50, width, 90);
+  rect(0,tape.pos.h + 50, width, height - 50);
 
   let y_offset = tape.pos.h + 40;
 
 
   fill(0);
-  textSize(16);
-  text("(old_state, old_symbol, new_state, new_symbol, move)", 200, y_offset + 40);
+  textSize(20);
+  text("(q0, s0, q1, s1, m)", 90, y_offset + 40);
 
   textSize(32);
   text("(", 10, y_offset + 80);
@@ -44,6 +44,17 @@ function setup() {
 	  ruleValues[i].input(inputListener);
   }
 
+  textAlign(LEFT);
+  textSize(12);
+
+  text("q0: old state", 10, y_offset + 110);
+  text("s0: old symbol", 10, y_offset + 125);
+  text("q1: new state", 10, y_offset + 140);
+  text("s1: new symbol", 10, y_offset + 155);
+  text("m: move", 10, y_offset + 170);
+
+  textAlign(CENTER);
+  textSize(32);
   var addRuleButton = createButton('add');
   addRuleButton.size(40);
   addRuleButton.position(180,y_offset + 60);
@@ -66,7 +77,7 @@ function step() {
 }
 
 function run() {
-  tm.run(300);
+  tm.run(50);
 }
 
 function drawCanvas(w,h) {

@@ -36,6 +36,8 @@ class TuringMachine {
 		this.addRule = (new_rule) => {
 			this.rules[this.rules.length] = new_rule;
 			console.log("Rule added successfully: " + new_rule.toString());
+
+			this.showRules();
 		}
 
 		// Remove a rule
@@ -94,6 +96,19 @@ class TuringMachine {
 		// console.log("=================================");
 		return rule;
 	}
+
+	showRules() {
+		textAlign(RIGHT);
+		textSize(14);
+		text("Your rules: ", width - 50, this.tape.pos.h + 80);
+		for (let i in this.rules) {
+			// console.log(this.rules[i].toString());
+			let y = 20 * i + this.tape.pos.h + 100;
+			// console.log(y);
+			text("- " + this.rules[i].toString(), width - 20, y);	
+		}
+		textAlign(CENTER);
+	}
 }
 
 // RULE: state,symbol -> state,symbol,move
@@ -108,7 +123,7 @@ class TMRule {
 		this.toString = () => {
 			return "(" + this.old_state + ", " + 
 				((this.old_symbol == "" || this.old_symbol == " ") ? 
-					empty : this.old_symbol) + " -> " + 
+					empty : this.old_symbol) + ") -> (" + 
 				this.new_state + ", " + 
 				((this.new_symbol == "" || this.new_symbol == " ") ? 
 					empty : this.new_symbol) + ", " + 
