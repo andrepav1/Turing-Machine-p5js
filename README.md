@@ -1,2 +1,2 @@
 # Turing-Machine-p5js
-A Turing Machine Implementation using JavaScript and the p5js library
+A stand-alone Turing Machine implementation using JavaScript and the p5js library
