@@ -239,7 +239,7 @@ function addSymbols() {
   rect(0,0,width,tm.tape.pos.h + 50);
   pop();
 
-  console.log(size);
+  // console.log(size);
 
   // Create and draw new tape
   tm.tape = new TMTape(symbols,size);
@@ -247,7 +247,7 @@ function addSymbols() {
 
   tapeLengthInput.elt.value = "";
   symbolsInput.elt.value = "";
-  console.log("Symbols added successfully");
+  // console.log("Symbols added successfully");
   alert("Symbols added successfully");
 }
 
@@ -264,7 +264,7 @@ function addRule() {
 
   if(ruleValues[0].value() == " " || ruleValues[0].value() == "" ||
   	 ruleValues[2].value() == " " || ruleValues[2].value() == "") {
-    console.log("You need to specify both states before adding a rule");
+    // console.log("You need to specify both states before adding a rule");
     alert("You need to specify both states before adding a rule");
   	return;
   }
@@ -304,7 +304,7 @@ function importTM(isCheeky) {
   // console.log(newTM);
 
   if(newTM.tape == undefined || newTM.rules == undefined) {
-    console.log("JSON string is not a Turing Machine");
+    // console.log("JSON string is not a Turing Machine");
     alert("JSON string is not a Turing Machine");
     return;
   }

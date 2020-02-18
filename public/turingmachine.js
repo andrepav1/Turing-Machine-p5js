@@ -13,7 +13,7 @@ class TuringMachine {
 			let formatted_rules = [];
 
 			for (let rule of this.rules.values()) {
-				console.log(rule);
+				// console.log(rule);
 				let rule_arr = [rule.TMpair.pair.state,
 								rule.TMpair.pair.symbol,
 								rule.TMtriple.triple.state,
@@ -51,16 +51,15 @@ class TuringMachine {
 				return false;
 			}
 
-			let rule_triple = this.getRule();
+			let rule = this.getRule();
 
-			if(rule_triple == undefined) {
-				console.log("No available moves: TM halts");
+			if(rule == undefined) {
+				// console.log("No available moves: TM halts");
 				alert("No available moves: TM halts");
 				return false;
 			}
-			console.log("Got " + rule_triple.toPrettyString());
 
-			this.applyRule(rule_triple);
+			this.applyRule(rule);
 			return true;
 		}
 
@@ -81,6 +80,8 @@ class TuringMachine {
 	}
 
 	applyRule(rule) {
+
+		console.log("Apply: " + rule.toPrettyString());
 
 		this.setCurrentState(rule.TMtriple.triple.state);
 		this.setSymbol(rule.TMtriple.triple.symbol);
@@ -114,15 +115,15 @@ class TuringMachine {
 
 	getRule() {
 		let pair = new TMPair(this.currState.toString(), this.tape.getCurrentSymbol());
-		console.log("=======================")
-		console.log("Getting " + pair.toPrettyString() + ": ");
+		// console.log("=======================")
+		// console.log("Getting " + pair.toPrettyString() + ": ");
 
 		return this.rules.get(pair.toString());
 	}
 
 	showRules() {
-		console.log("=======================")
-		console.log("Listing:")
+		// console.log("=======================")
+		// console.log("Listing:")
 
 		textAlign(LEFT);
 		textSize(16);
@@ -138,7 +139,7 @@ class TuringMachine {
 		let xPos = 390;
 		for (const [pair, rule] of this.rules) {
 			// console.log(pair);
-			console.log(rule.toPrettyString());
+			// console.log(rule.toPrettyString());
 			let yPos = 20 * index + this.tape.pos.h + 100;
 
 			if(yPos > height - 20) { // If rules go off screen, show them on the right side

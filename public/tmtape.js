@@ -70,13 +70,14 @@ class TMTape {
 
   show() {
     
-    console.log("State:" + this.currState + ", Position: " + this.currPosition);
+    console.log("state:" + this.currState + "pos: " + this.currPosition);
 
-    fill(230)
+    fill(230);
     rect(this.pos.x,this.pos.y,this.pos.w,this.pos.h);
 
     if(this.TMsquares.length == 0) {
-      console.log("Turing Machine is empty")
+      console.log("Turing Machine is empty");
+      alert("Turing Machine is empty");
       return;
     }
 
