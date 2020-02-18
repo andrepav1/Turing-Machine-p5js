@@ -1,41 +1,75 @@
 class TuringMachine {
 
 	constructor(_t) {
-		this.rules = []
+		this.rules = new Map();
 		this.tape = _t;
 		this.displayCurrentTape = () => this.tape.show(); 
 		this.currState = 0;
 		this.currPosition = 0;
-		this.timeout = false;
-		
+		this.timeout = undefined;
+
+		this.exportTM = () => { 
+
+			let formatted_rules = [];
+
+			for (let rule of this.rules.values()) {
+				console.log(rule);
+				let rule_arr = [rule.TMpair.pair.state,
+								rule.TMpair.pair.symbol,
+								rule.TMtriple.triple.state,
+								rule.TMtriple.triple.symbol,
+								rule.TMtriple.triple.move ];
+
+				formatted_rules[formatted_rules.length] = rule_arr;
+			}
+
+			return JSON.stringify({ rules : formatted_rules, tape: this.tape.symbols }, undefined, 2);
+		}
 		// Run Turing Machine
 		this.run = (timeout) => {
-			if(!this.timeout) this.timeout = timeout;
+			if(this.timeout == undefined) this.timeout = timeout;
+
+			if(this.timeout == 0) {
+				while(this.step());
+				this.displayCurrentTape();
+				return;
+			}
+			
+			// console.log(this.timeout);
+
 			if(this.step()) {
-				setTimeout(this.run,this.timeout);
+				setTimeout(this.run, this.timeout); 
 			} // else do nothing
 		}
 
 		// Do one step of Turing Machine
 		this.step = () => {
 
-			let rule = this.getRule();
-
-			// console.log(rule);
-
-			if(rule == undefined) {
-				console.log("No available moves: TM halts");
+			if(this.tape.getCurrentSymbol() === "...") {
+				console.log("Tape finished: TM halts");
+				alert("Tape finished: TM halts");
 				return false;
 			}
 
-			this.applyRule(rule);
+			let rule_triple = this.getRule();
+
+			if(rule_triple == undefined) {
+				console.log("No available moves: TM halts");
+				alert("No available moves: TM halts");
+				return false;
+			}
+			console.log("Got " + rule_triple.toPrettyString());
+
+			this.applyRule(rule_triple);
 			return true;
 		}
 
 		// Add a new Rule
 		this.addRule = (new_rule) => {
-			this.rules[this.rules.length] = new_rule;
-			console.log("Rule added successfully: " + new_rule.toString());
+
+			// Adding the rule to hashmap 
+			this.rules.set(new_rule.TMpair.toString(),new_rule);
+			console.log("Rule added successfully: " + new_rule.toPrettyString());
 
 			this.showRules();
 		}
@@ -48,9 +82,9 @@ class TuringMachine {
 
 	applyRule(rule) {
 
-		this.setCurrentState(rule.new_state);
-		this.setSymbol(rule.new_symbol);
-		this.setCurrentPosition(rule.move);
+		this.setCurrentState(rule.TMtriple.triple.state);
+		this.setSymbol(rule.TMtriple.triple.symbol);
+		this.setCurrentPosition(rule.TMtriple.triple.move);
 		this.displayCurrentTape();
 	}
 
@@ -78,34 +112,44 @@ class TuringMachine {
 		}
 	}
 
-	// Complexity here can be improved using a Map
 	getRule() {
-		let curr_state = this.currState;
-		let curr_symbol = this.tape.getCurrentSymbol();
+		let pair = new TMPair(this.currState.toString(), this.tape.getCurrentSymbol());
+		console.log("=======================")
+		console.log("Getting " + pair.toPrettyString() + ": ");
 
-		// console.log("Searching: " + curr_state + ", " + ((curr_symbol === "" || curr_symbol === " ") ? empty : curr_symbol));
-		// console.log("=================================");
-		// console.log("Available Rules:");
-		let rule;
-		for (let i in this.rules) {
-			// console.log(this.rules[i].toString());
-			if(this.rules[i].old_state === curr_state.toString() && this.rules[i].old_symbol === curr_symbol.toString()) {
-				rule = this.rules[i];
-			}
-		}
-		// console.log("=================================");
-		return rule;
+		return this.rules.get(pair.toString());
 	}
 
 	showRules() {
-		textAlign(RIGHT);
+		console.log("=======================")
+		console.log("Listing:")
+
+		textAlign(LEFT);
+		textSize(16);
+
+		fill(250);
+		rect(385, this.tape.pos.h + 60, 260,height - (this.tape.pos.h + 70));
+		fill(0);
+
+		text("Your rules: ", 400, this.tape.pos.h + 80);
+
 		textSize(14);
-		text("Your rules: ", width - 50, this.tape.pos.h + 80);
-		for (let i in this.rules) {
-			// console.log(this.rules[i].toString());
-			let y = 20 * i + this.tape.pos.h + 100;
+		let index = 0;
+		let xPos = 390;
+		for (const [pair, rule] of this.rules) {
+			// console.log(pair);
+			console.log(rule.toPrettyString());
+			let yPos = 20 * index + this.tape.pos.h + 100;
+
+			if(yPos > height - 20) { // If rules go off screen, show them on the right side
+				index = 0; 
+				yPos = 20 * index + this.tape.pos.h + 100;
+				xPos += 130;
+			}
+
+			index++;
 			// console.log(y);
-			text("- " + this.rules[i].toString(), width - 20, y);	
+			text("- " + rule.toPrettyString(), xPos, yPos);	
 		}
 		textAlign(CENTER);
 	}
@@ -113,21 +157,36 @@ class TuringMachine {
 
 // RULE: state,symbol -> state,symbol,move
 class TMRule {
-	constructor(_old_state, _old_symbol, _new_state, _new_symbol, _move) {
-		this.old_state = _old_state;
-		this.new_state = _new_state;
-		this.old_symbol = _old_symbol;
-		this.new_symbol = _new_symbol;
-		this.move = _move;
+	constructor(_pair,_triple) {
+		this.TMpair = _pair;
+		this.TMtriple = _triple;
+		this.toString = () => JSON.stringify(this);
+		this.toPrettyString = () => this.TMpair.toPrettyString() + " -> " + this.TMtriple.toPrettyString();
+	}
 
-		this.toString = () => {
-			return "(" + this.old_state + ", " + 
-				((this.old_symbol == "" || this.old_symbol == " ") ? 
-					empty : this.old_symbol) + ") -> (" + 
-				this.new_state + ", " + 
-				((this.new_symbol == "" || this.new_symbol == " ") ? 
-					empty : this.new_symbol) + ", " + 
-				((this.move != "R" && this.move != "L") ? 
-					"0" : this.move) + ")"; }
+}
+
+class TMPair {
+	constructor(_state, _symbol) {
+		this.pair = { state: _state, symbol: _symbol };
+		this.toString = () => JSON.stringify(this);
+		this.toPrettyString = () => {
+			return "(" + this.pair.state + ", " + 
+				((this.pair.symbol == "" || this.pair.symbol == " ") ? 
+					empty : this.pair.symbol) + ")"; }
+
+	}
+}
+
+class TMTriple {
+	constructor(_state, _symbol, _move) {
+		this.triple = { state: _state, symbol: _symbol, move: _move };
+		this.toString = () => JSON.stringify(this);
+		this.toPrettyString = () => {
+			return "(" + this.triple.state + ", " + 
+				((this.triple.symbol == "" || this.triple.symbol == " ") ? 
+					empty : this.triple.symbol) + ", " + 
+				((this.triple.move != "R" && this.triple.move != "L") ? 
+					"0" : this.triple.move) + ")"; }
 	}
 }

@@ -6,11 +6,11 @@ const empty = "Λ";
 class TMTape {
 
   constructor(_symbols, _size) {
-    this.squareSize = Math.floor(window.innerWidth / (_size + 1));
+    this.squareSize = Math.ceil(window.innerWidth / (_size + 1));
     this.pos = new Position(0,40,window.innerWidth, this.squareSize);
     this.symbols = _symbols;
     this.tapeSize = _size;
-    this.offsetPos = Math.floor((_size - _symbols.length) / 5);
+    this.offsetPos = Math.floor((_size - _symbols.length) / 4);
     this.TMsquares = [];
     this.currPosition = 0;
     this.currState = 0;
@@ -21,7 +21,7 @@ class TMTape {
 
   initTape() {
 
-    let midTapePos = Math.floor((this.tapeSize - (this.symbols.length)) / 5);
+    let midTapePos = Math.floor((this.tapeSize - (this.symbols.length)) / 4);
     // console.log(window.innerWidth + " - " + midTapePos);
 
     for(let i = 0; i < this.tapeSize + 2; i++) {
@@ -30,13 +30,13 @@ class TMTape {
       let symbol = "" 
 
       if(i >= midTapePos && i < midTapePos + this.symbols.length) {
-        symbol = this.symbols[i - midTapePos];
+        symbol = this.symbols[i - midTapePos].trim();
       }
 
       if(symbol === " ") symbol = "";
 
       if(i == 0 || i == this.tapeSize + 1) {
-        symbol = "⋯";
+        symbol = "...";
         tapePos = "";
       }
 
