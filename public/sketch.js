@@ -17,12 +17,22 @@ let symbolsInput;
 let addSymbolsButton;
 let tapeLengthInput;
 let resetTMButton;
+let selPresetsTM;
+let importPresetTMButton;
 
 let anim_velocity;
 
-function setup() {
-  initSketch();
+// Preset TM
+let copyTM;
+let multTM;
+let evenTM;
 
+function setup() {
+  copyTM = loadStrings("presets/copyTM.txt");
+  multTM = loadStrings("presets/multTM.txt");
+  evenTM = loadStrings("presets/evenTM.txt");
+
+  initSketch();
 }
 
 function initSketch() {
@@ -134,6 +144,20 @@ function initSketch() {
   });
   
   // =======================================
+
+  text("Or you can try these Turing Machines:", 10, y_offset + 450);
+  selPresetsTM = createSelect();
+  selPresetsTM.size(120);
+  selPresetsTM.position(10, y_offset + 460);
+  selPresetsTM.attribute("placeholder", "1,2,a,b,,+");
+  selPresetsTM.option('copy');
+  selPresetsTM.option('multiplication');  
+  // selPresetsTM.option('even');
+
+  importPresetTMButton = createButton("Import TM");
+  importPresetTMButton.size(90);
+  importPresetTMButton.position(135,y_offset + 460);
+  importPresetTMButton.mousePressed(importPresetTM);
 
   text("Set symbols on the tape and length:", 10, y_offset + 360);
   symbolsInput = createInput();
@@ -325,6 +349,8 @@ function importTM(isCheeky) {
   addSymbolsButton.remove();
   tapeLengthInput.remove();
   resetTMButton.remove();
+  selPresetsTM.remove();
+  importPresetTMButton.remove();
 
   // ====================================
 
@@ -356,4 +382,23 @@ function exportTM() {
 
   // TM_import_export_input.value().select();
   // document.execCommand("copy");
+}
+
+function importPresetTM() {
+	let presetTM;
+	switch(selPresetsTM.value()) {
+		case "copy":
+			TM_import_export_input.elt.value = copyTM.join("");
+			break;
+		case "multiplication":
+			TM_import_export_input.elt.value = multTM.join("");
+			break;
+		case "even":
+			TM_import_export_input.elt.value = evenTM.join("");
+			break;
+		default: //If default, restartTM
+			exportTM();
+			break;
+	}
+	importTM();
 }
